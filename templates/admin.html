@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Админ Панель</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .flag {
+      width: 32px;
+      height: 24px;
+      border-radius: 4px;
+    }
+    .dark-mode {
+      background: #1e1e1e;
+      color: #eee;
+    }
+    .dark-mode input, .dark-mode select, .dark-mode textarea {
+      background: #2c2c2c;
+      color: #fff;
+      border: 1px solid #444;
+    }
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+    }
+  </style>
+</head>
+<body id="body">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>🔧 Админ Панель</h2>
+      <div>
+        <button class="btn btn-outline-secondary theme-toggle" onclick="toggleTheme()">🌙</button>
+        <a href="/logout" class="btn btn-outline-danger ms-2">🚪 Шығу</a>
+      </div>
+    </div>
+    <form method="POST">
+      <input type="hidden" name="action" value="update" />
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead class="table-light">
+            <tr><th>Флаг</th><th>Страна</th><th>Код</th><th>Цена (₸)</th><th>❌</th></tr>
+          </thead>
+          <tbody>
+            {% for c in countries %}
+            <tr>
+              <td><img src="https://flagcdn.com/w40/{{ c.flag[:2]|lower }}.png" class="flag" /></td>
+              <td>{{ c.name }}</td>
+              <td>{{ c.code }}</td>
+              <td><input type="number" name="price_{{ c.id }}" value="{{ c.price }}" class="form-control"/></td>
+              <td>
+                <button name="delete_id" value="{{ c.id }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Шынымен өшіресіз бе?')">❌</button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <button type="submit" class="btn btn-primary mb-4">💾 Сақтау</button>
+    </form>
+
+    <hr/>
+
+    <h5>➕ Жаңа ел қосу</h5>
+    <form method="POST">
+      <input type="hidden" name="action" value="add" />
+      <div class="row g-2">
+        <div class="col-md"><input type="text" name="name" class="form-control" placeholder="Ел атауы (мыс. Корея)" required /></div>
+        <div class="col-md"><input type="text" name="code" class="form-control" placeholder="+82" required /></div>
+        <div class="col-md"><input type="text" name="flag" class="form-control" placeholder="kr.png" required /></div>
+        <div class="col-md"><input type="number" name="price" class="form-control" placeholder="Бағасы (₸)" required /></div>
+        <div class="col-md-auto"><button type="submit" class="btn btn-success">Қосу</button></div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      document.getElementById('body').classList.toggle('dark-mode');
+    }
+  </script>
+</body>
+</html>

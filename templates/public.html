@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sim Prices</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: #f8f9fa;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .country-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      margin-bottom: 12px;
+      transition: 0.2s ease;
+    }
+    .country-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    .flag {
+      width: 32px;
+      height: 24px;
+      margin-right: 12px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+    .search {
+      margin-bottom: 20px;
+    }
+    .dark-mode {
+      background: #1e1e1e;
+      color: #eee;
+    }
+    .dark-mode .country-card {
+      background: #2c2c2c;
+      color: #fff;
+    }
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+    }
+  </style>
+</head>
+<body id="body">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>физ номеры цена by @aqrxrx</h2>
+  <div>
+    <button class="btn btn-outline-secondary theme-toggle" onclick="toggleTheme()">🌙</button>
+    <a href="/login" class="btn btn-outline-primary ms-2">🔐 Админ</a>
+  </div>
+</div>
+    <input type="text" id="search" class="form-control search" placeholder="Поиск страны..." />
+    <div id="list">
+      {% for c in countries %}
+      <div class="country-card">
+        <div class="d-flex align-items-center">
+          <img src="https://flagcdn.com/w40/{{ c.flag[:2]|lower }}.png" class="flag" />
+          <div>
+            <strong>{{ c.name }}</strong> <small>({{ c.code }})</small>
+          </div>
+        </div>
+        <div><strong>{{ c.price }} ₸</strong></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <script>
+    function toggleTheme() {
+      document.getElementById('body').classList.toggle('dark-mode');
+    }
+
+    const search = document.getElementById('search');
+    const list = document.getElementById('list');
+    search.addEventListener('input', () => {
+      const q = search.value.toLowerCase();
+      [...list.children].forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
